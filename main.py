@@ -3,6 +3,8 @@
 
 # pip install requests
 
+import re
+
 import requests
 
 
@@ -14,13 +16,15 @@ def main():
     print('####################')
 
     cep_input = input('Digite o CEP: ')
+    cep_clean = re.sub('[^0-9]', '', str(cep_input))
+    print(f'O cep digitado foi: {cep_clean}')
 
-    if len(cep_input) != 8:
+    if len(cep_clean) != 8:
         print('CEP inválido')
         print('-----------------------------')
         exit()
 
-    request = requests.get(f'https://viacep.com.br/ws/{cep_input}/json/')
+    request = requests.get(f'https://viacep.com.br/ws/{cep_clean}/json/')
     address_data = request.json()
 
 
@@ -29,22 +33,22 @@ def main():
         print('####################')
         print('==> CEP ENCONTRADO <==')
         # print(request.json())
-        print(f'CEP: {address_data["cep"]}')
-        print(f'Logradouro: {address_data["logradouro"]}')
-        print(f'Complemento: {address_data["complemento"]}')
-        print(f'Bairro: {address_data["bairro"]}')
-        print(f'Localidade: {address_data["localidade"]}')
-        print(f'UF: {address_data["uf"]}')
-        print(f'IBGE: {address_data["ibge"]}')
-        print(f'Gia: {address_data["gia"]}')
-        print(f'DDD: {address_data["ddd"]}')
-        print(f'Siafi: {address_data["siafi"]}')
+        print(f'CEP: {address_data.get("cep", None)}')
+        print(f'Logradouro: {address_data.get("logradouro", None)}')
+        print(f'Complemento: {address_data.get("complemento", None)}')
+        print(f'Bairro: {address_data.get("bairro", None)}')
+        print(f'Localidade: {address_data.get("localidade", None)}')
+        print(f'UF: {address_data.get("uf", None)}')
+        print(f'IBGE: {address_data.get("ibge", None)}')
+        print(f'Gia: {address_data.get("gia", None)}')
+        print(f'DDD: {address_data.get("ddd", None)}')
+        print(f'Siafi: {address_data.get("siafi", None)}')
 
         print('####################')
         print('####################')
 
     else:
-        print(f'CEP não encontrado você digitou: {cep_input}')
+        print(f'CEP não encontrado você digitou: {cep_clean}')
         exit()
 
     option = int(input('Deseja realizar uma nova consulta?\n1-SIM\n2-NÃO\n'))
